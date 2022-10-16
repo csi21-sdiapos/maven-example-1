@@ -8,6 +8,7 @@
 - [3. Ejecución del proyecto](#ejecuci%C3%B3n-del-proyecto)
 - [4. pom.xml --> Dependencias](#pomxml----dependencias)
 - [5. Ejemplo Maven MVC por consola](#ejemplo-maven-mvc-por-consola)
+- [6. Conclusión final](#conclusi%C3%B3n-final)
 
 <!-- /TOC -->
 
@@ -114,3 +115,8 @@ Como ya he desarrollado esa práctica en repositorios anteriores, no entraré en
 
 ![](./img/17.png)
 
+# 6. Conclusión final
+
+Durante esta práctica, aparte de conocer por encima mediante un vistazo general qué es Maven, en esta parte en concreto hemos practicado con las dependencias... y para entenderlo rápidamente se me ha ocurrido la siguiente analogía: Maven y su archivo *pom.xml*, serían en sus equivalentes más modernos, lo que ya conocemos como NPM (de node) y su *package.json*, es decir, por un lado tenemos un archivo donde definimos nuestras dependencias y sus versiones, y por otro lado tenemos un gestor de dependencias que con un comando, nos instala todas las dependencias que hay definidas. 
+
+De este modo, una persona que se descarga el proyecto para seguir el trabajo de un compañero de su empresa, pues con solo un comando se instala todo lo necesario para que el proyecto funcione y poder seguir trabajando con él, amortiguando así en mayor medida los posibles fallos humanos que derivarían de tener que instalar (añadir el *.jar* al *build path*) uno mismo todas las dependencias requeridas.
