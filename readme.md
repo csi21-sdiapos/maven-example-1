@@ -9,6 +9,13 @@
 - [4. pom.xml --> Dependencias](#pomxml----dependencias)
 - [5. Ejemplo Maven MVC por consola](#ejemplo-maven-mvc-por-consola)
 - [6. Conclusión final](#conclusi%C3%B3n-final)
+- [7. Extra: Consultas UPDATE y DELETE](#extra-consultas-update-y-delete)
+    - [Consulta Update](#consulta-update)
+        - [*Models --> Consultas --> ConsultasPostgreSQL.java*](#models----consultas----consultaspostgresqljava)
+        - [*Default Package --> App.java*](#default-package----appjava)
+    - [Consulta DELETE](#consulta-delete)
+        - [*Models --> Consultas --> ConsultasPostgreSQL.java*](#models----consultas----consultaspostgresqljava)
+        - [*Default Package --> App.java*](#default-package----appjava)
 
 <!-- /TOC -->
 
@@ -120,3 +127,139 @@ Como ya he desarrollado esa práctica en repositorios anteriores, no entraré en
 Durante esta práctica, aparte de conocer por encima mediante un vistazo general qué es Maven, en esta parte en concreto hemos practicado con las dependencias... y para entenderlo rápidamente se me ha ocurrido la siguiente analogía: Maven y su archivo *pom.xml*, serían en sus equivalentes más modernos, lo que ya conocemos como NPM (de node) y su *package.json*, es decir, por un lado tenemos un archivo donde definimos nuestras dependencias y sus versiones, y por otro lado tenemos un gestor de dependencias que con un comando, nos instala todas las dependencias que hay definidas. 
 
 De este modo, una persona que se descarga el proyecto para seguir el trabajo de un compañero de su empresa, pues con solo un comando se instala todo lo necesario para que el proyecto funcione y poder seguir trabajando con él, amortiguando así en mayor medida los posibles fallos humanos que derivarían de tener que instalar (añadir el *.jar* al *build path*) uno mismo todas las dependencias requeridas.
+
+# Extra: Consultas UPDATE y DELETE
+
+**Nota**: aún estamos haciendo pruebas en consola (sin vistas).
+
+## Consulta Update
+
+### *Models --> Consultas --> ConsultasPostgreSQL.java*
+
+```java
+public static void ConsultaUpdateAlumnos(Connection conexionGenerada)
+    {
+        Statement declaracionSQL = null;
+        ResultSet resultadoConsulta = null;
+        ConexionPostgreSQL conexionPostgresql = new ConexionPostgreSQL();
+        
+        conexionGenerada = conexionPostgresql.generaConexion(VariablesConexionPostgreSQL.getHost(),VariablesConexionPostgreSQL.getPort(),VariablesConexionPostgreSQL.getDb(),VariablesConexionPostgreSQL.getUser(),VariablesConexionPostgreSQL.getPass());
+        
+        System.out.println("\n[INFORMACIÓN-Consultas-ConsultasPostgreSQL.java] Realiza consulta a PostgreSQL");
+        
+        // pedimos un id por consola
+        System.out.print("\n\tIntroduzca un alumno_id:\t");
+        Scanner sc = new Scanner(System.in);
+        int id = sc.nextInt();
+        
+        if(conexionGenerada != null) {
+            
+            try {
+                declaracionSQL = conexionGenerada.createStatement();
+                resultadoConsulta = declaracionSQL.executeQuery("UPDATE \"EjemploInicial\".\"alumnos\" SET alumno_nombre = 'updateName', alumno_apellidos = 'updateSurname' WHERE alumno_id = '"+id+"'");
+
+                System.out.println("\n[INFORMACIÓN-Consultas-ConsultasPostgreSQL.java] Cierre del resultado, de la declaración, y de la conexión");
+                
+                resultadoConsulta.close();
+                declaracionSQL.close();
+                conexionGenerada.close();
+                sc.close();
+                
+            } catch (SQLException e) {
+                System.out.println("\n[ERROR-Consultas-ConsultasPostgreSQL.java] Error generando la declaracionSQL: " + e);
+            }
+        }
+    }
+```
+
+### *(Default Package) --> App.java*
+
+```java
+/********************** Hacemos un update del (primer) alumno con id=1 *************/
+        
+ConsultasPostgreSQL.ConsultaUpdateAlumnos(conexionGenerada);
+        
+/*********** Volvemos a obtener y mostrar la tabla alumnos de la BBDD ************/
+        
+listaAlumnos = new ArrayList<AlumnoDTO>();
+
+listaAlumnos = ConsultasPostgreSQL.ConsultaSelectAlumnos(conexionGenerada);
+
+System.out.println("\n\n\tID\tNombre\tApellidos\tEmail");
+System.out.println("\t-----------------------------------------------");
+
+for(AlumnoDTO alumno : listaAlumnos) {
+        System.out.println(alumno.toString());
+}
+```
+
+![](./img/18.png)
+
+![](./img/19.png)
+
+## Consulta DELETE
+
+### *Models --> Consultas --> ConsultasPostgreSQL.java*
+
+```java
+/*************************************** CONSULTAS DELETE ******************************************/
+
+    public static void ConsultaDeleteAlumnos(Connection conexionGenerada)
+    {
+        Statement declaracionSQL = null;
+        ResultSet resultadoConsulta = null;
+        ConexionPostgreSQL conexionPostgresql = new ConexionPostgreSQL();
+        
+        conexionGenerada = conexionPostgresql.generaConexion(VariablesConexionPostgreSQL.getHost(),VariablesConexionPostgreSQL.getPort(),VariablesConexionPostgreSQL.getDb(),VariablesConexionPostgreSQL.getUser(),VariablesConexionPostgreSQL.getPass());
+        
+        System.out.println("\n[INFORMACIÓN-Consultas-ConsultasPostgreSQL.java] Realiza consulta a PostgreSQL");
+        
+        // pedimos un id por consola
+        System.out.print("\n\tIntroduzca un alumno_id para eliminarlo:\t");
+        Scanner sc = new Scanner(System.in);
+        int id = sc.nextInt();
+        
+        if(conexionGenerada != null) {
+            
+            try {
+                declaracionSQL = conexionGenerada.createStatement();
+                resultadoConsulta = declaracionSQL.executeQuery("DELETE FROM \"EjemploInicial\".\"alumnos\" WHERE alumno_id = '"+id+"'");
+
+                System.out.println("\n[INFORMACIÓN-Consultas-ConsultasPostgreSQL.java] Cierre del resultado, de la declaración, y de la conexión");
+                
+                resultadoConsulta.close();
+                declaracionSQL.close();
+                conexionGenerada.close();
+                sc.close();
+
+            } catch (SQLException e) {
+                System.out.println("\n[ERROR-Consultas-ConsultasPostgreSQL.java] Error generando la declaracionSQL: " + e);
+            }
+        }
+    }
+```
+
+### *(Default Package) --> App.java*
+
+```java
+/********************** Hacemos un delete del (primer) alumno con id=1 *************/
+        
+ConsultasPostgreSQL.ConsultaDeleteAlumnos(conexionGenerada);
+        
+/*********** Volvemos a obtener y mostrar la tabla alumnos de la BBDD ************/
+        
+listaAlumnos = new ArrayList<AlumnoDTO>();
+
+listaAlumnos = ConsultasPostgreSQL.ConsultaSelectAlumnos(conexionGenerada);
+
+System.out.println("\n\n\tID\tNombre\tApellidos\tEmail");
+System.out.println("\t-----------------------------------------------");
+
+for(AlumnoDTO alumno : listaAlumnos) {
+    System.out.println(alumno.toString());
+}
+```
+
+![](./img/20.png)
+
+![](./img/21.png)

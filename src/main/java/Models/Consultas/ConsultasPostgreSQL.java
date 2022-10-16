@@ -2,6 +2,7 @@ package Models.Consultas;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -87,5 +88,77 @@ public class ConsultasPostgreSQL {
 			}
 		}
 		
+    }
+    
+    /*************************************** CONSULTAS UPDATE ******************************************/
+
+    public static void ConsultaUpdateAlumnos(Connection conexionGenerada)
+    {
+        Statement declaracionSQL = null;
+        ResultSet resultadoConsulta = null;
+        ConexionPostgreSQL conexionPostgresql = new ConexionPostgreSQL();
+        
+        conexionGenerada = conexionPostgresql.generaConexion(VariablesConexionPostgreSQL.getHost(),VariablesConexionPostgreSQL.getPort(),VariablesConexionPostgreSQL.getDb(),VariablesConexionPostgreSQL.getUser(),VariablesConexionPostgreSQL.getPass());
+        
+        System.out.println("\n[INFORMACIÓN-Consultas-ConsultasPostgreSQL.java] Realiza consulta a PostgreSQL");
+        
+        // pedimos un id por consola
+        System.out.print("\n\tIntroduzca un alumno_id para modificar su nombre y apellidos:\t");
+        Scanner sc = new Scanner(System.in);
+        int id = sc.nextInt();
+        
+        if(conexionGenerada != null) {
+            
+            try {
+                declaracionSQL = conexionGenerada.createStatement();
+                resultadoConsulta = declaracionSQL.executeQuery("UPDATE \"EjemploInicial\".\"alumnos\" SET alumno_nombre = 'updateName', alumno_apellidos = 'updateSurname' WHERE alumno_id = '"+id+"'");
+
+                System.out.println("\n[INFORMACIÓN-Consultas-ConsultasPostgreSQL.java] Cierre del resultado, de la declaración, y de la conexión");
+                
+                resultadoConsulta.close();
+                declaracionSQL.close();
+                conexionGenerada.close();
+                sc.close();
+                
+            } catch (SQLException e) {
+                System.out.println("\n[ERROR-Consultas-ConsultasPostgreSQL.java] Error generando la declaracionSQL: " + e);
+            }
+        }
+    }
+    
+    /*************************************** CONSULTAS DELETE ******************************************/
+
+    public static void ConsultaDeleteAlumnos(Connection conexionGenerada)
+    {
+        Statement declaracionSQL = null;
+        ResultSet resultadoConsulta = null;
+        ConexionPostgreSQL conexionPostgresql = new ConexionPostgreSQL();
+        
+        conexionGenerada = conexionPostgresql.generaConexion(VariablesConexionPostgreSQL.getHost(),VariablesConexionPostgreSQL.getPort(),VariablesConexionPostgreSQL.getDb(),VariablesConexionPostgreSQL.getUser(),VariablesConexionPostgreSQL.getPass());
+        
+        System.out.println("\n[INFORMACIÓN-Consultas-ConsultasPostgreSQL.java] Realiza consulta a PostgreSQL");
+        
+        // pedimos un id por consola
+        System.out.print("\n\tIntroduzca un alumno_id para eliminarlo:\t");
+        Scanner sc = new Scanner(System.in);
+        int id = sc.nextInt();
+        
+        if(conexionGenerada != null) {
+            
+            try {
+                declaracionSQL = conexionGenerada.createStatement();
+                resultadoConsulta = declaracionSQL.executeQuery("DELETE FROM \"EjemploInicial\".\"alumnos\" WHERE alumno_id = '"+id+"'");
+
+                System.out.println("\n[INFORMACIÓN-Consultas-ConsultasPostgreSQL.java] Cierre del resultado, de la declaración, y de la conexión");
+                
+                resultadoConsulta.close();
+                declaracionSQL.close();
+                conexionGenerada.close();
+                sc.close();
+                
+            } catch (SQLException e) {
+                System.out.println("\n[ERROR-Consultas-ConsultasPostgreSQL.java] Error generando la declaracionSQL: " + e);
+            }
+        }
     }
 }

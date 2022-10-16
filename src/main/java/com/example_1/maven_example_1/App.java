@@ -30,5 +30,39 @@ public class App
         for(AlumnoDTO alumno : listaAlumnos) {
         	System.out.println(alumno.toString());
         }
+        
+        /********************** Hacemos un update del (primer) alumno con id=1 *************/
+        
+        ConsultasPostgreSQL.ConsultaUpdateAlumnos(conexionGenerada);
+        
+        /*********** Volvemos a obtener y mostrar la tabla alumnos de la BBDD ************/
+        
+        listaAlumnos = new ArrayList<AlumnoDTO>();
+
+        listaAlumnos = ConsultasPostgreSQL.ConsultaSelectAlumnos(conexionGenerada);
+
+        System.out.println("\n\n\tID\tNombre\tApellidos\tEmail");
+        System.out.println("\t-----------------------------------------------");
+
+        for(AlumnoDTO alumno : listaAlumnos) {
+            System.out.println(alumno.toString());
+        }
+        
+        /********************** Hacemos un delete del (primer) alumno con id=1 *************/
+        
+        ConsultasPostgreSQL.ConsultaDeleteAlumnos(conexionGenerada);
+        
+        /*********** Volvemos a obtener y mostrar la tabla alumnos de la BBDD ************/
+        
+        listaAlumnos = new ArrayList<AlumnoDTO>();
+
+        listaAlumnos = ConsultasPostgreSQL.ConsultaSelectAlumnos(conexionGenerada);
+
+        System.out.println("\n\n\tID\tNombre\tApellidos\tEmail");
+        System.out.println("\t-----------------------------------------------");
+
+        for(AlumnoDTO alumno : listaAlumnos) {
+            System.out.println(alumno.toString());
+        }
     }
 }
